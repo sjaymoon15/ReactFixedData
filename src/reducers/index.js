@@ -1,7 +1,10 @@
 import { combineReducers } from 'redux';
+import AdsReducer from './adsReducer';
+import AdsMetrics from './adsMetricsReducer';
 
 const rootReducer = combineReducers({
-  state: (state = {}) => state
+  ads: AdsReducer,
+  adsMetrics: AdsMetrics
 });
 
 export default rootReducer;
