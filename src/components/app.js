@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchAds, fetchAdsMetrics } from '../actions'
+import Adtable from './adTable';
 
 class App extends Component {
   componentDidMount() {
@@ -10,7 +11,9 @@ class App extends Component {
   render() {
     //we have ads, and adsMetrics in this.props.ads adsMetrics
     return (
-      <div>setting up react</div>
+      <div>
+        <Adtable />
+      </div>
     );
   }
 }
