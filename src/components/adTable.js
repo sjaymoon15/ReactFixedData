@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { ScrollSync, Grid } from 'react-virtualized';
+
+import { fetchAds, fetchAdsMetrics } from '../actions'
 
 const rowCount = 5
 const colCount = 20
@@ -22,31 +25,25 @@ const Cell = ({
       {rows[rowIndex][columnIndex]}
   </div>
 
-const HeaderCell = ({
-  columnIndex,
-  key,
-  style,
-}) =>
+const HeaderCell = ({ columnIndex, key, style }) =>
   <div className='grid-cell' key={key} style={style}>
       {headers[columnIndex]}
   </div>
 
-const FixedColCell = ({
-  rowIndex,
-  key,
-  style,
-}) =>
+const FixedColCell = ({ rowIndex, key, style }) =>
   <div className='grid-cell' key={key} style={style}>
       {fixedCol[rowIndex]}
   </div>
 
-const FixedCell = () =>
-  <div>
-    {fixedCell}
-  </div>
+const FixedCell = () => <div>{fixedCell}</div>
 
-export default class AdTable extends Component {
+class AdTable extends Component {
+  componentDidMount() {
+    this.props.fetchAds();
+    this.props.fetchAdsMetrics();
+  }
   render() {
+    console.log(this.props)
     return (
       <ScrollSync>
         {({ onScroll, scrollTop, scrollLeft }) =>
@@ -138,3 +135,13 @@ export default class AdTable extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  console.log(state);
+  const { ads, adsMetrics } = state;
+  return { ads, adsMetrics };
+};
+
+export default connect(mapStateToProps,
+  { fetchAds, fetchAdsMetrics }
+)(AdTable);
