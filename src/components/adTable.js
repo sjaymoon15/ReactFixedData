@@ -4,46 +4,43 @@ import { ScrollSync, Grid } from 'react-virtualized';
 
 import { fetchAds, fetchAdsMetrics } from '../actions'
 
-const rowCount = 5
-const colCount = 20
-const cellHeight = 50
-const cellWidth = 72
-
-const headers = new Array(colCount - 1).fill(0).map((val, idx) => `H${idx + 1}`) // the fixed header that only scrolls horizontally
-const makeRow = row => new Array(colCount - 1).fill(0).map((val, idx) => `R${row} C${idx + 1}`)
-const rows = new Array(rowCount).fill(0).map((val, idx) => makeRow(idx)) // the main body
-const fixedCol = new Array(rowCount - 1).fill(0).map((val, idx) => `R${idx + 1} C0`) // the fixed column that only scrolls vertically
-const fixedCell = 'R0 C0' // The fixed cell that never moves
-
-const Cell = ({
-  columnIndex,
-  key,
-  rowIndex,
-  style,
-}) =>
-  <div className='grid-cell' key={key} style={style}>
-      {rows[rowIndex][columnIndex]}
-  </div>
-
-const HeaderCell = ({ columnIndex, key, style }) =>
-  <div className='grid-cell' key={key} style={style}>
-      {headers[columnIndex]}
-  </div>
-
-const FixedColCell = ({ rowIndex, key, style }) =>
-  <div className='grid-cell' key={key} style={style}>
-      {fixedCol[rowIndex]}
-  </div>
-
-const FixedCell = () => <div>{fixedCell}</div>
-
 class AdTable extends Component {
   componentDidMount() {
     this.props.fetchAds();
     this.props.fetchAdsMetrics();
   }
+
   render() {
-    console.log(this.props)
+    const cellHeight = 50;
+    const cellWidth = 220;
+    const fixedColWith = 100;
+
+    const { headers, rows, fixedCol, fixedCell } = this.props;
+    if (!headers || !rows || !fixedCol || !fixedCell) { return <div>Loading...</div> }
+    const rowCount = rows.length + 1;
+    const colCount = headers.length + 1;
+
+    const Cell = ({
+      columnIndex,
+      key,
+      rowIndex,
+      style,
+    }) =>
+      <div className='grid-cell' key={key} style={style}>
+          {rows[rowIndex][columnIndex]}
+      </div>
+
+    const HeaderCell = ({ columnIndex, key, style }) =>
+      <div className='grid-cell' key={key} style={style}>
+          {headers[columnIndex]}
+      </div>
+
+    const FixedColCell = ({ rowIndex, key, style }) =>
+      <div className='grid-cell' key={key} style={style}>
+          {fixedCol[rowIndex]}
+      </div>
+
+    const FixedCell = () => <div>{fixedCell}</div>
     return (
       <ScrollSync>
         {({ onScroll, scrollTop, scrollLeft }) =>
@@ -59,12 +56,12 @@ class AdTable extends Component {
                 cellRenderer={FixedCell}
                 columnCount={1}
                 columnHeight={cellHeight}
-                columnWidth={cellWidth}
+                columnWidth={fixedColWith}
                 height={cellHeight}
                 rowCount={1}
                 rowHeight={cellHeight}
-                rowWidth={cellWidth}
-                width={cellWidth}
+                rowWidth={fixedColWith}
+                width={fixedColWith}
               />
             </div>
             <div
@@ -79,20 +76,20 @@ class AdTable extends Component {
                 className={'no-scroll'}
                 columnCount={1}
                 columnHeight={rowCount * cellHeight}
-                columnWidth={cellWidth}
+                columnWidth={fixedColWith}
                 height={1000}
                 rowCount={rowCount - 1}
                 rowHeight={cellHeight}
-                rowWidth={colCount * cellWidth}
+                rowWidth={colCount * fixedColWith}
                 scrollTop={scrollTop}
-                width={cellWidth}
+                width={fixedColWith}
               />
             </div>
             <div
               style={{
                 position: 'absolute',
                 top: 0,
-                left: cellWidth,
+                left: fixedColWith,
               }}
             >
               <Grid
@@ -106,14 +103,14 @@ class AdTable extends Component {
                 rowHeight={cellHeight}
                 rowWidth={colCount * cellWidth}
                 scrollLeft={scrollLeft}
-                width={500}
+                width={600}
               />
             </div>
             <div
               style={{
                 position: 'absolute',
                 top: cellHeight,
-                left: cellWidth,
+                left: fixedColWith,
               }}
             >
               <Grid
@@ -126,7 +123,7 @@ class AdTable extends Component {
                 rowCount={rowCount - 1}
                 rowHeight={cellHeight}
                 rowWidth={colCount * cellWidth}
-                width={500}
+                width={600}
               />
             </div>
           </div>
@@ -137,10 +134,34 @@ class AdTable extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state);
-  const { ads, adsMetrics } = state;
-  return { ads, adsMetrics };
+  const { ads, adsMetrics } = state.adsData;
+  if (!ads || !adsMetrics) {
+    return {};
+  }
+  return processAdsDataForVirtualized({ ads, adsMetrics });
 };
+
+const processAdsDataForVirtualized = ({ ads, adsMetrics }) => {
+  const fixedCell = 'Ad Name';
+  const headers = adsMetrics.column_names;
+  const fixedColRaw = ads.ads;
+  const fixedCol = fixedColRaw.map(ad => ad.remote_id);
+  const rowsRaw = adsMetrics.rows;
+  let rows = [];
+  fixedCol.forEach(ad => {
+    let newRow = [];
+    const selectedRow = rowsRaw.filter(row => row.remote_id === ad)[0];
+    headers.forEach(headerColName => {
+      let newRowElement = selectedRow[headerColName];
+      if (typeof newRowElement === 'number' && newRowElement % 1 !== 0) {
+        newRowElement = selectedRow[headerColName].toFixed(1);
+      }
+      newRow.push(newRowElement);
+    })
+    rows.push(newRow);
+  })
+  return { headers, rows, fixedCol, fixedCell };
+}
 
 export default connect(mapStateToProps,
   { fetchAds, fetchAdsMetrics }

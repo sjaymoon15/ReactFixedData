@@ -1,19 +1,26 @@
-
 /* ------------ For React Virturalized ------------*/
+.grid-cell {
+  text-align: center;
+  border: 1px solid gray;
+}
 /* Collection default theme */
 
 .ReactVirtualized__Collection {
+  border: 1px solid gray;
 }
 
 .ReactVirtualized__Collection__innerScrollContainer {
+  border: 1px solid gray;
 }
 
 /* Grid default theme */
 
 .ReactVirtualized__Grid {
+  /* border: 1px solid gray; */
 }
 
 .ReactVirtualized__Grid__innerScrollContainer {
+  border: 1px solid gray;
 }
 
 /* Table default theme */
