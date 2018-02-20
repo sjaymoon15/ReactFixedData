@@ -1,7 +1,5 @@
 # React Fixed Data Representation
 
-One Paragraph of project description goes here
-
 ## Getting Started
 
 Checkout this repo, install dependencies, then start the local Node server with the following:
@@ -19,6 +17,7 @@ http://localhost:3050/
 ```
 
 ## Check out this project on heroku
-
-
+```
+https://react-fixed-data.herokuapp.com/
+```
 
