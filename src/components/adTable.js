@@ -15,9 +15,9 @@ class AdTable extends Component {
     if (!headers || !rows || !fixedCol || !fixedCell) { return <div>Loading...</div>; }
 
     const cellHeight = 50;
-    const cellWidth = 220;
+    const cellWidth = 240;
     const fixedColWidth = 100;
-    const tableWidth = 600;
+    const tableWidth = 1000;
     const rowCount = rows.length + 1;
     const colCount = headers.length + 1;
     const tableHeight = cellHeight * rowCount;
