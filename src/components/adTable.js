@@ -11,14 +11,16 @@ class AdTable extends Component {
   }
 
   render() {
+    const { headers, rows, fixedCol, fixedCell } = this.props;
+    if (!headers || !rows || !fixedCol || !fixedCell) { return <div>Loading...</div>; }
+
     const cellHeight = 50;
     const cellWidth = 220;
-    const fixedColWith = 100;
-
-    const { headers, rows, fixedCol, fixedCell } = this.props;
-    if (!headers || !rows || !fixedCol || !fixedCell) { return <div>Loading...</div> }
+    const fixedColWidth = 100;
+    const tableWidth = 600;
     const rowCount = rows.length + 1;
     const colCount = headers.length + 1;
+    const tableHeight = cellHeight * rowCount;
 
     const Cell = ({
       columnIndex,
@@ -56,12 +58,12 @@ class AdTable extends Component {
                 cellRenderer={FixedCell}
                 columnCount={1}
                 columnHeight={cellHeight}
-                columnWidth={fixedColWith}
+                columnWidth={fixedColWidth}
                 height={cellHeight}
                 rowCount={1}
                 rowHeight={cellHeight}
-                rowWidth={fixedColWith}
-                width={fixedColWith}
+                rowWidth={fixedColWidth}
+                width={fixedColWidth}
               />
             </div>
             <div
@@ -76,20 +78,20 @@ class AdTable extends Component {
                 className={'no-scroll'}
                 columnCount={1}
                 columnHeight={rowCount * cellHeight}
-                columnWidth={fixedColWith}
-                height={1000}
+                columnWidth={fixedColWidth}
+                height={tableHeight}
                 rowCount={rowCount - 1}
                 rowHeight={cellHeight}
-                rowWidth={colCount * fixedColWith}
+                rowWidth={colCount * fixedColWidth}
                 scrollTop={scrollTop}
-                width={fixedColWith}
+                width={fixedColWidth}
               />
             </div>
             <div
               style={{
                 position: 'absolute',
                 top: 0,
-                left: fixedColWith,
+                left: fixedColWidth,
               }}
             >
               <Grid
@@ -103,14 +105,14 @@ class AdTable extends Component {
                 rowHeight={cellHeight}
                 rowWidth={colCount * cellWidth}
                 scrollLeft={scrollLeft}
-                width={600}
+                width={tableWidth}
               />
             </div>
             <div
               style={{
                 position: 'absolute',
                 top: cellHeight,
-                left: fixedColWith,
+                left: fixedColWidth,
               }}
             >
               <Grid
@@ -118,12 +120,12 @@ class AdTable extends Component {
                 columnCount={colCount - 1}
                 columnHeight={rowCount * cellHeight}
                 columnWidth={cellWidth}
-                height={250}
+                height={tableHeight}
                 onScroll={onScroll}
                 rowCount={rowCount - 1}
                 rowHeight={cellHeight}
                 rowWidth={colCount * cellWidth}
-                width={600}
+                width={tableWidth}
               />
             </div>
           </div>
