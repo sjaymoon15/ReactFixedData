@@ -16,7 +16,7 @@ describe('Test Async Actions', () => {
   afterEach(() => { mock.reset(); });
   afterAll(() => { mock.restore(); });
  
-  test('creates FETCH_ADS when fetching ads has been done', () => {
+  it('creates FETCH_ADS when fetching ads has been done', () => {
     mock.onGet('/api/ads').reply(200, adsPayload);
  
     const expectedActionsAds = [
@@ -29,7 +29,7 @@ describe('Test Async Actions', () => {
     })
   })
 
-  test('creates FETCH_ADS_METRICS when fetching ads_metrics has been done', () => {
+  it('creates FETCH_ADS_METRICS when fetching ads_metrics has been done', () => {
     mock.onGet('/api/ads_metrics').reply(200, ads_metricsPayload);
  
     const expectedActionsAdsMetrics = [

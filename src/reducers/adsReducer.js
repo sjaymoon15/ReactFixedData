@@ -9,7 +9,6 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case FETCH_ADS:
-    console.log(action.payload);
       return { ...state, ads: action.payload };
     case FETCH_ADS_METRICS:
       return { ...state, adsMetrics: action.payload };
