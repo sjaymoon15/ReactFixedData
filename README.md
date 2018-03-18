@@ -21,3 +21,8 @@ http://localhost:3050/
 https://react-fixed-data.herokuapp.com/
 ```
 
+## Run Tests
+
+```
+npm run test
+```
